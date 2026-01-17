@@ -6,7 +6,7 @@ from textual import on
 
 # IMPORTS
 from assets.player_stats import player
-from screens.battle_screen import BattleScreen
+from screens.map_screen import MapScreen
 
 class NameScreen(Screen):
     CSS = """
@@ -49,4 +49,4 @@ class NameScreen(Screen):
 
         player["name"] = new_name
 
-        self.app.switch_screen(BattleScreen())
+        self.app.switch_screen(MapScreen())

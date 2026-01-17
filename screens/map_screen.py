@@ -1,0 +1,106 @@
+from textual.screen import Screen
+from textual.widgets import Label, Static
+from textual.app import ComposeResult
+from textual.events import Key
+from textual.containers import Container
+import random
+
+# Import BattleScreen for random encounters
+from screens.battle_screen import BattleScreen
+
+class MapScreen(Screen): #css = geminiiiiii
+    CSS = """
+    MapScreen {
+        align: center middle;
+        background: black;
+    }
+    #map-container {
+        width: auto;
+        height: auto;
+        border: solid white;
+        background: #000000;
+        color: white;
+        text-align: center;
+    }
+    """
+    # by gemini
+    # 1 = Wall, 0 = Walkable
+    # A simple "Ruins" layout
+    WORLD_MAP = [
+        "########################################",
+        "#......................................#",
+        "#..##################################..#",
+        "#..#................................#..#",
+        "#..#..#######..###################..#..#",
+        "#..#..#.....#..#.................#..#..#",
+        "#..#..#.....#..#.................#..#..#",
+        "#..#..#.....#..#.................#..#..#",
+        "#..####.....####.................#..#..#",
+        "#...................................#..#",
+        "#..##################################..#",
+        "#......................................#",
+        "########################################"
+    ]
+
+    def __init__(self):
+        super().__init__()
+        self.player_x = 2
+        self.player_y = 1
+        self.steps_taken = 0
+
+    def compose(self) -> ComposeResult:
+        with Container(id="map-container"):
+            yield Label("", id="map-label")
+
+    def on_mount(self):
+        self.render_map()
+        self.query_one("#map-label").focus()
+
+    def render_map(self):
+        # copy map to draw plyr
+        display_map = []
+        
+        for y, row in enumerate(self.WORLD_MAP):
+            if y == self.player_y:
+                
+                row_chars = list(row)
+                row_chars[self.player_x] = "[cyan]@[/cyan]"
+                display_map.append("".join(row_chars))
+            else:
+                display_map.append(row)
+        
+        # Join rows with newlines
+        full_text = "\n".join(display_map)
+        self.query_one("#map-label").update(full_text)
+
+    def on_key(self, event: Key):
+        # calc pos
+        target_x = self.player_x
+        target_y = self.player_y
+
+        if event.key == "up":
+            target_y -= 1
+        elif event.key == "down":
+            target_y += 1
+        elif event.key == "left":
+            target_x -= 1
+        elif event.key == "right":
+            target_x += 1
+        else:
+            return
+
+        # wall detection
+        if 0 <= target_y < len(self.WORLD_MAP) and 0 <= target_x < len(self.WORLD_MAP[0]):
+            # check
+            tile = self.WORLD_MAP[target_y][target_x]
+            if tile != "#":
+                #allow movin
+                self.player_x = target_x
+                self.player_y = target_y
+                self.steps_taken += 1
+                self.check_encounter()
+                self.render_map()
+    def check_encounter(self):
+        #logic is every step taken, 5% chance monster
+        if random.random() < 0.05:
+            self.app.push_screen(BattleScreen())

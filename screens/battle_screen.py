@@ -161,7 +161,7 @@ class BattleScreen(Screen):
                         box.update("* But it refused.")
                         self.start_player_turn()
                     else:
-                        self.app.exit()
+                        self.dismiss()
 
                 self.set_timer(1.5, lambda: self.app.push_screen(GameOver(), on_game_over))
             else:
@@ -214,7 +214,7 @@ class BattleScreen(Screen):
                     is_levelup = gain_exp(xp)
                     
                     def on_win(result):
-                        self.app.exit() 
+                        self.dismiss() 
 
                     self.set_timer(1.0, lambda: self.app.push_screen(VictoryScreen(xp, gold), on_win))
 
@@ -285,7 +285,7 @@ class BattleScreen(Screen):
                         gain_gold(gold)
                         
                         def on_win(result):
-                            self.app.exit()
+                            self.dismiss()
                         
                         self.set_timer(1.0, lambda: self.app.push_screen(VictoryScreen(0, gold), on_win))
                     else:
