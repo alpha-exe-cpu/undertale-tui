@@ -184,15 +184,15 @@ class BattleScreen(Screen):
         btn_id = event.button.id
         box = self.query_one("#dialogue-box")
 
-        if btn_id == "btn-fight":
+        if btn_id == "btn-fight": #rev 2
+            #disable buttons
             self.query("Button").set(disabled=True)
             
             def handle_damage(damage):
-                # because the damage is now the final number
                 self.current_monster["hp"] -= damage
                 self.update_monster_visuals()
                 
-                # reply textz
+                #hit texts
                 if damage > player["atk"] * 1.2:
                     msg = f"* CRITICAL HIT! ({damage} dmg)"
                 elif damage < player["atk"]:
@@ -202,11 +202,11 @@ class BattleScreen(Screen):
                 
                 box.update(msg)
                 
+                #if enemy alive
                 if self.current_monster["hp"] > 0:
-                    # enm turn
                     self.set_timer(1.5, self.enemy_turn)
                 else:
-                    # victory--
+                    #victory---
                     xp = self.current_monster.get("exp", 0)
                     gold = self.current_monster.get("gold", 0)
                     
@@ -214,22 +214,26 @@ class BattleScreen(Screen):
                     is_levelup = gain_exp(xp)
                     
                     def on_win(result):
-                        self.dismiss() 
+                        self.dismiss()
 
-                    self.set_timer(1.0, lambda: self.app.push_screen(VictoryScreen(xp, gold), on_win))
+                    self.set_timer(1.0, lambda: self.app.push_screen(
+                        VictoryScreen(xp, gold, leveled_up=is_levelup), 
+                        on_win
+                    ))
 
-            # calc hp perc
+            #calc perc
             p_pct = self.player_hp / self.player_max_hp
             m_pct = 0
             if self.current_monster["max_hp"] > 0:
                 m_pct = self.current_monster["hp"] / self.current_monster["max_hp"]
 
-            # launch game
-            # pass "atk"
-            self.app.push_screen(
-                TimingGame(player_at=player["atk"], is_defense=False, player_hp_pct=p_pct, monster_hp_pct=m_pct), 
-                handle_damage
-            )
+            #launch timing game(most fixes)
+            self.app.push_screen(TimingGame(
+                player_at=player["atk"],    
+                is_defense=False,           
+                player_hp_pct=p_pct,        
+                monster_hp_pct=m_pct        
+            ), handle_damage)
             
         elif btn_id == "btn-act":
             acts = self.current_monster['acts']
@@ -296,7 +300,7 @@ class BattleScreen(Screen):
                     # 40% success
                     if random.random() < 0.40:
                         box.update("* I'm outta here.....")
-                        self.set_timer(1.0, self.app.exit)
+                        self.set_timer(1.0, self.dismiss)
                     else: #60% fail
                         box.update("* Escape failed! Don't trip next time..")
                         self.set_timer(1.5, self.enemy_turn)

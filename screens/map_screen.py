@@ -121,7 +121,8 @@ class MapScreen(Screen): #css = geminiiiiii
                     self.frozen = False 
                     self.query_one("#map-container").border_title = "" 
                     self.query_one("#map-label").focus() 
-                    self.safe_until = time.time() + 120 # restart timer
+                    wait_time = random.randint(60, 120)
+                    self.safe_until = time.time() + wait_time # restart timer
                 
                 self.app.push_screen(BattleScreen(), on_return)
 
