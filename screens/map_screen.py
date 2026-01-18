@@ -4,8 +4,9 @@ from textual.app import ComposeResult
 from textual.events import Key
 from textual.containers import Container
 import random
+import time
 
-# Import BattleScreen for random encounters
+#btlscr import
 from screens.battle_screen import BattleScreen
 
 class MapScreen(Screen): #css = geminiiiiii
@@ -47,6 +48,8 @@ class MapScreen(Screen): #css = geminiiiiii
         self.player_x = 2
         self.player_y = 1
         self.steps_taken = 0
+        self.frozen = False #new
+        self.safe_until = 0 # new 2
 
     def compose(self) -> ComposeResult:
         with Container(id="map-container"):
@@ -74,6 +77,8 @@ class MapScreen(Screen): #css = geminiiiiii
         self.query_one("#map-label").update(full_text)
 
     def on_key(self, event: Key):
+        if self.frozen:
+            return
         # calc pos
         target_x = self.player_x
         target_y = self.player_y
@@ -101,6 +106,23 @@ class MapScreen(Screen): #css = geminiiiiii
                 self.check_encounter()
                 self.render_map()
     def check_encounter(self):
-        #logic is every step taken, 5% chance monster
-        if random.random() < 0.05:
-            self.app.push_screen(BattleScreen())
+        if time.time() < self.safe_until: # add safe for 2 min logic
+            return
+        #if monsterr!
+        if random.random() < 0.05: 
+            #freeze
+            self.frozen = True
+            
+            #vusal
+            self.query_one("#map-container").border_title = "[red]! ENCOUNTER ![/red]"
+            
+            def start_battle():
+                def on_return(result):
+                    self.frozen = False 
+                    self.query_one("#map-container").border_title = "" 
+                    self.query_one("#map-label").focus() 
+                    self.safe_until = time.time() + 120 # restart timer
+                
+                self.app.push_screen(BattleScreen(), on_return)
+
+            self.set_timer(1.5, start_battle)
