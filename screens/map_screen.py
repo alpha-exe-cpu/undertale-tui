@@ -6,6 +6,7 @@ from textual.containers import Container
 import random
 import time
 from screens.menu_screen import MenuScreen
+from screens.shop_screen import ShopScreen
 
 #btlscr import
 from screens.battle_screen import BattleScreen
@@ -83,6 +84,9 @@ class MapScreen(Screen): #css = geminiiiiii
         if event.key == "c":
             self.app.push_screen(MenuScreen())
             return #added menuscreen 
+        if event.key == "s":
+            self.app.push_screen(ShopScreen())
+            return #added shop
         # calc pos
         target_x = self.player_x
         target_y = self.player_y
