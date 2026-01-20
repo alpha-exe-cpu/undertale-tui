@@ -1,6 +1,9 @@
 from textual.app import App
-from screens.intro_screen import IntroScreen
 from textual import events
+from assets.save_manager import has_save_file
+from screens.intro_screen import IntroScreen
+from screens.title_screen import TitleScreen
+
 
 class UndertaleTUI(App): #our main app class
     
@@ -14,7 +17,10 @@ class UndertaleTUI(App): #our main app class
     BINGINGS = [("q", "quit", "Quit Game")]
     
     def on_mount(self) -> None:
-        self.push_screen(IntroScreen())
+        if has_save_file():
+            self.push_screen(TitleScreen())
+        else:
+            self.push_screen(IntroScreen())
         
 if __name__ == "__main__":
     app = UndertaleTUI()

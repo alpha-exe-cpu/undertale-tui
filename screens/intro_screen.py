@@ -1,10 +1,11 @@
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import Static, Footer
+from textual.widgets import Static
 from textual import events
 import asyncio
 from assets.story_text import INTRO_LINES
 from screens.logo_screen import LogoScreen
+from assets.save_manager import load_game, has_save_file
 
 # i took help from gemini for css
 class IntroScreen(Screen):
@@ -28,8 +29,6 @@ class IntroScreen(Screen):
 # that css was complex ig ahh
     def compose(self) -> ComposeResult:
         yield Static("", id="story-box")
-        yield Footer()
-
     def on_mount(self) -> None:
         self.story_widget = self.query_one("#story-box")
         self.run_worker(self.play_intro())

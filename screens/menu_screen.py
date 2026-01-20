@@ -4,6 +4,7 @@ from textual.widgets import Button, Label
 from textual.containers import Container
 from textual import on
 from assets.player_stats import player
+from assets.save_manager import save_game
 
 class MenuScreen(Screen): #css by gemini
     
@@ -53,6 +54,15 @@ class MenuScreen(Screen): #css by gemini
         color: black;
         text-style: bold;
     }
+    #btn-save {
+        margin-top: 1;
+        background: #000044; 
+        color: yellow;
+        border: none;
+        width: 100%;
+        text-align: center;
+    }
+    #btn-save:focus { background: yellow; color: black; }
     #btn-close {
         margin-top: 2;
         background: #333333;
@@ -77,28 +87,40 @@ class MenuScreen(Screen): #css by gemini
                 yield Button(item, classes="item-btn")
             yield Label("", id="feedback") #for after eating or using
             yield Button("Close Menu", id="btn-close")
+            yield Button("SAVE GAME", id="btn-save")
         
     @on(Button.Pressed)
     def handle_buttons(self, event: Button.Pressed):
-        if event.button.id == "btn-close":
-            self.dismiss()
+        btn_id = event.button.id
         
+        #close
+        if btn_id == "btn-close":
+            self.dismiss()
+
+        #save
+        elif btn_id == "btn-save":
+            success = save_game()
+            if success:
+                self.query_one("#feedback").update("Game Saved!")
+                event.button.disabled = True
+            else:
+                self.query_one("#feedback").update("Save Failed!")
+        
+        #item
         elif "item-btn" in event.button.classes:
             item_name = str(event.button.label)
             
-            # calc healingh!
             old_hp = player["hp"]
             player["hp"] = min(player["hp"] + 10, player["max_hp"])
             recovered = player["hp"] - old_hp
             
-            # remove the item from inv
             if item_name in player["inventory"]:
                 player["inventory"].remove(item_name)
             
-            # disable btns, not glitch eating bro
             event.button.disabled = True
-            #update visuals
+            
             self.query_one("#feedback").update(f"You ate {item_name}.\nRecovered {recovered} HP!")
+            
             new_stats = f"{player['name']}\nLV {player['lv']}\nHP {player['hp']}/{player['max_hp']}\nG {player['gold']}"
             self.query_one("#stats-label").update(new_stats)
             
