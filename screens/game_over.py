@@ -3,6 +3,7 @@ from textual.app import ComposeResult
 from textual.widgets import Static, Button
 from textual.containers import Container
 from textual import on
+from assets.music_manager import play_music
 
 class GameOver(Screen):
     BINDINGS = [
@@ -62,3 +63,6 @@ class GameOver(Screen):
             self.dismiss(True)
         elif event.button.id == "btn-quit":
             self.dismiss(False)
+            
+    def on_mount(self):
+        play_music("death")

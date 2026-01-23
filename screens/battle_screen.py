@@ -5,6 +5,7 @@ from textual.containers import Container
 from textual import on
 import textwrap
 import random
+from assets.music_manager import play_music
 
 # file imports
 from screens.act_menu import ActMenu
@@ -56,6 +57,7 @@ class BattleScreen(Screen):
 
     def on_mount(self):
         self.load_random_monster()
+        play_music("battle")
 
     #player turn
     def start_player_turn(self):

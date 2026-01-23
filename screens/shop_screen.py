@@ -5,6 +5,7 @@ from textual.containers import Container
 from textual import on
 from assets.player_stats import player
 from assets.shop_data import SHOP_ITEMS, SHOP_DESCRIPTIONS
+from assets.music_manager import play_music
 
 class ShopScreen(Screen):
     # 1. Navigation Bindings
@@ -85,3 +86,5 @@ class ShopScreen(Screen):
                 self.query_one("#msg-box").update(f"[green]Bought {item_name}![/green]")
             else: #if plyr broke
                 self.query_one("#msg-box").update("[red]Not enough G![/red]")
+    def on_mount(self):
+        play_music("shop")

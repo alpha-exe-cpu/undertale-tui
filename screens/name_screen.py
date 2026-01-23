@@ -3,6 +3,7 @@ from textual.app import ComposeResult
 from textual.widgets import Input, Label
 from textual.containers import Container
 from textual import on
+from assets.music_manager import play_music
 
 # IMPORTS
 from assets.player_stats import player
@@ -32,6 +33,9 @@ class NameScreen(Screen):
         color: yellow;
     }
     """
+    
+    def on_mount(self):
+        play_music("creation")
 
     def compose(self) -> ComposeResult:
         with Container(id="name-container"):

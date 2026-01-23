@@ -7,6 +7,8 @@ import random
 import time
 from screens.menu_screen import MenuScreen
 from screens.shop_screen import ShopScreen
+from assets.music_manager import play_music
+from widgets.dialogue_box import DialogueBox
 
 #btlscr import
 from screens.battle_screen import BattleScreen
@@ -14,10 +16,17 @@ from screens.battle_screen import BattleScreen
 class MapScreen(Screen): #css = geminiiiiii
     CSS = """
     MapScreen {
+        /* 🚨 CRITICAL: This tells the screen it has two levels */
+        layers: base overlay;
         align: center middle;
         background: black;
     }
+
     #map-container {
+        /* 🚨 CRITICAL: Puts the map on the bottom level */
+        layer: base;
+        
+        /* Your styling */
         width: auto;
         height: auto;
         border: solid white;
@@ -60,6 +69,9 @@ class MapScreen(Screen): #css = geminiiiiii
     def on_mount(self):
         self.render_map()
         self.query_one("#map-label").focus()
+        play_music("ruins")
+    def on_screen_resume(self):
+        play_music("ruins")
 
     def render_map(self):
         # copy map to draw plyr
@@ -87,6 +99,14 @@ class MapScreen(Screen): #css = geminiiiiii
         if event.key == "s":
             self.app.push_screen(ShopScreen())
             return #added shop
+        if event.key == "t":
+            # Only open if one isn't already open
+            if not self.query("DialogueBox"):
+                box = DialogueBox("* Greetings, human.\n* I am a text box.")
+                box.styles.layer = "overlay"
+                self.mount(box)
+        if self.query("DialogueBox"): 
+            return
         # calc pos
         target_x = self.player_x
         target_y = self.player_y

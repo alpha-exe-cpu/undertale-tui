@@ -4,6 +4,7 @@ from textual.widgets import Static
 import asyncio
 from assets.logo import GAME_LOGO
 from screens.name_screen import NameScreen
+from assets.music_manager import play_sfx_ovr
 
 class LogoScreen(Screen):
 # css = gemini
@@ -27,6 +28,7 @@ class LogoScreen(Screen):
 
     def on_mount(self) -> None:
         self.run_worker(self.show_logo())
+        play_sfx_ovr("noise")
 
     async def show_logo(self):
         logo_widget = self.query_one("#logo")

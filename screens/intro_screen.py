@@ -6,6 +6,7 @@ import asyncio
 from assets.story_text import INTRO_LINES
 from screens.logo_screen import LogoScreen
 from assets.save_manager import load_game, has_save_file
+from assets.music_manager import play_music
 
 # i took help from gemini for css
 class IntroScreen(Screen):
@@ -32,7 +33,7 @@ class IntroScreen(Screen):
     def on_mount(self) -> None:
         self.story_widget = self.query_one("#story-box")
         self.run_worker(self.play_intro())
-
+        play_music("intro")
     async def play_intro(self):
 # it will type the story line by line
         await asyncio.sleep(1.0) #pause at start

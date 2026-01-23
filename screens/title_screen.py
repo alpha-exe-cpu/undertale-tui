@@ -7,6 +7,7 @@ from assets.save_manager import load_game, has_save_file, SAVE_FILE
 import json
 import os
 import time
+from assets.music_manager import play_music
 
 class TitleScreen(Screen):
     BINDINGS = [
@@ -77,6 +78,7 @@ class TitleScreen(Screen):
     def on_mount(self):
             btn_cont = self.query_one("#btn-load")
             btn_cont.focus()
+            play_music("menu")
     
     @on(Button.Pressed)
     def handle_menu_click(self, event: Button.Pressed):
