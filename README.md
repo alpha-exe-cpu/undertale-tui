@@ -71,5 +71,5 @@ This is a fan-made tribute. Undertale is a trademark of Toby Fox. This project i
 
 ---
 
-**Developed by Adrish Biswas**
+**Developed by Adrish Biswas - for flavortown**
 *Stay Determined.*
