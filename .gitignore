@@ -1,0 +1,6 @@
+build/
+dist/
+*.exe
+*.spec
+__pycache__/
+savegame.json
