@@ -28,8 +28,10 @@ The game is optimized for a standard PC keyboard.
 | **Enter / Space** | Select Option / Confirm / Hit Timing Bar |
 | **C** | Open Character Menu |
 | **S** | Open Shop |
-| **T** | Talk / Interact |
+| **Enter** | Talk / Interact |
 | **Esc** | Go back / Exit sub-menus |
+| **The B in map** | is bosss fight |
+| **The S in map** | is a sign |
 
 ---
 
